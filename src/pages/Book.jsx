@@ -1,7 +1,7 @@
 import { config } from '../config/library'
 
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getText } from '../library'
 
 function generateFullPage(text) {
@@ -13,6 +13,55 @@ function BookPage({ text }) {
         <main className="book">
             <h1>{text}</h1>
         </main>
+    )
+}
+
+function BookNavigation({ i, n0 = 0, n, route, exitRoute }) {
+    i = Number(i)
+    i = Math.max(n0, Math.min(i, n - 1))
+    const hasPrev = i > n0
+    const hasNext = i < n - 1
+
+    return (
+        <nav aria-label="Book page navigation">
+                {(hasPrev 
+                    ? (
+                    <Link to={`${route}/0`}>
+                        {'<<'}
+                    </Link>
+                    )
+                    : <span/>
+                )}
+                <span> </span>
+                {(hasPrev 
+                    ? (
+                    <Link to={`${route}/${i - 1}`}>
+                        {'<'}
+                    </Link>
+                    )
+                    : <span/>
+                )}
+
+                <span> {i + 1}/{n} </span>
+
+                {(hasNext 
+                    ? <Link  to={`${route}/${i + 1}`}>
+                        {'>'}
+                    </Link> 
+                    : <span/>
+                )}
+                <span> </span>
+                {(hasNext 
+                    ? <Link to={`${route}/${n - 1}`}>
+                        {'>>'}
+                    </Link>
+                    : <span/>
+                )}
+                
+                <span> </span>
+                
+                <Link to={exitRoute}>x</Link>
+            </nav>
     )
 }
 
@@ -53,12 +102,15 @@ export function Book() {
 
     return (
         <main className="book">
-            <h1>Book {book}</h1>
-            <p>Room: {room}</p>
-            <p>Wall: {wall}</p>
-            <p>Shelf: {shelf}</p>
-            <p>Page: {page}</p>
+            <p>Book {book} Room: {room} Wall: {wall} Shelf: {shelf} Page: {page}</p>
+            
             <BookPage text={generateFullPage(text)} />
+            
+            <BookNavigation 
+                i={page} n={config.dim.pagesPerBook}
+                route={`/browse/${room}/${wall}/${shelf}/${book}`}
+                exitRoute={`/browse/${room}/${wall}/${shelf}`}
+            />
         </main>
     )
 }
