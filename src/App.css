@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  font-family: Inter, open-sans, sans-serif;
 }
 
 html, body, #root {
@@ -11,7 +12,6 @@ html, body, #root {
 body {
   background: #100d0b;
   color: #f5e8ce;
-  font-family: Georgia, serif;
 }
 
 .wall {

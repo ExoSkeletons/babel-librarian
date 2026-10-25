@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia|Roboto|Audiowide|Inter" />
     <BrowserRouter>
       <App />
     </BrowserRouter>
