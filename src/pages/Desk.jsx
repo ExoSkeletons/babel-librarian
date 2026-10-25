@@ -6,6 +6,8 @@ import { generateAnswer, getLocation, dialogFor } from '../library'
 
 import { WallPage } from './WallPage'
 
+import { NavLink } from 'react-router-dom'
+
 
 export function Desk() {
   const [phase, setPhase] = useState(states.idle)
@@ -30,30 +32,32 @@ export function Desk() {
 
   return (
     <main className="desk">
-      <section className="layout">
-        <section className="question-panel">
-          <div className="dialog">{dialog}</div>
+        <section className="layout">
+            <section className="question-panel">
+                <div className="dialog">{dialog}</div>
 
-          <form onSubmit={onSubmitQuestion}>
-            <input
-              disabled={!phase.canAsk}
-              type="text"
-              value={question}
-              onChange={(event) => setQuestion(event.target.value)}
-              placeholder="Ask a question..."
+                <form onSubmit={onSubmitQuestion}>
+                    <input
+                    disabled={!phase.canAsk}
+                    type="text"
+                    value={question}
+                    onChange={(event) => setQuestion(event.target.value)}
+                    placeholder="Ask a question..."
+                    />
+                    <button type="submit">{phase.askText}</button>
+                </form>
+            </section>
+
+            <img
+            className="librarian"
+            src={phase.img}
+            alt="Librarian"
             />
-            <button type="submit">{phase.askText}</button>
-          </form>
         </section>
-
-        <img
-          className="librarian"
-          src={phase.img}
-          alt="Librarian"
-        />
-      </section>
-
-      <WallPage room={'a23ff4ccgsg545'} wall={76}/>      
+        <nav>
+            <NavLink to="/browse">Browse</NavLink>
+        </nav>
+        <WallPage room={'a23ff4ccgsg545'} wall={76}/>      
     </main>
   )
 }
