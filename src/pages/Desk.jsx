@@ -56,6 +56,9 @@ export function Desk() {
         </section>
         <nav>
             <NavLink to="/browse">Browse</NavLink>
+            <NavLink to="/browse/0">Room</NavLink>
+            <NavLink to="/browse/0/0">Wall</NavLink>
+            <NavLink to="/browse/0/0/0/0">Book</NavLink>
         </nav>
         <WallPage room={'a23ff4ccgsg545'} wall={76}/>      
     </main>
