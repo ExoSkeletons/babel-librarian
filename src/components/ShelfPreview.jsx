@@ -1,4 +1,4 @@
-import { BookSpine } from './BookSpine'
+import { BookSpine } from './BookPreview'
 
 
 export function Shelf({ shelf, n, onClick }) {

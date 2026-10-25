@@ -1,5 +1,5 @@
 import { config } from '../config/library'
-import { Shelf } from '../components/Shelf'
+import { Shelf } from '../components/ShelfPreview'
 
 export function WallPage({ room, wall }) {
     function clickShelf({ shelf }) {
