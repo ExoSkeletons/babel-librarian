@@ -18,8 +18,9 @@ function App() {
       <Route path="/browse" element={<RoomsMap />} />
       <Route path="/browse/:room" element={<Room />} />
       <Route path="/browse/:room/:wall" element={<WallPage />} />
-      <Route path="/browse/:room/:wall/:book" element={<Book />} />
-      <Route path="/browse/:room/:wall/:book/:page" element={<Book />} />
+      <Route path="/browse/:room/:wall/:shelf" element={<WallPage />} />
+      <Route path="/browse/:room/:wall/:shelf/:book" element={<Book />} />
+      <Route path="/browse/:room/:wall/:shelf/:book/:page" element={<Book />} />
     </Routes>
   )
 }
