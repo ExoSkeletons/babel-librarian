@@ -1,0 +1,31 @@
+
+
+.wall {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+}
+
+.shelf {
+    display: flex;
+    padding: 0;
+    list-style: none;
+    background: linear-gradient(to bottom, #b89b68, #573814);
+    border: 15px solid #3b2400;
+    border-radius: 8px;
+}
+
+.shelf li + li {
+    margin-left: -14px;
+}
+
+.book-spine {
+    width: 100%;
+    height: auto;
+}
+
+.book-spine:hover {
+    transform: translate(5px, 5px) scale(1.01);
+    filter: brightness(1.2);
+}

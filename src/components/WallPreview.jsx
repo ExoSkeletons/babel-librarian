@@ -1,3 +1,5 @@
+import './components.css'
+
 import { config } from "../config/library"
 
 export function Wall({ room, wall, onClick }) {

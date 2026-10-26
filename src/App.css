@@ -13,24 +13,3 @@ body {
   background: #100d0b;
   color: #f5e8ce;
 }
-
-.wall {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-}
-
-.shelf {
-  display: flex;
-  overflow-x: scroll;
-  list-style: none;
-  padding: 12px;
-  background: linear-gradient(to bottom, #b89b68, #573814);
-  border: 15px solid #3b2400;
-  border-radius: 8px;
-}
-
-.shelf li {
-  flex: 0 0 auto;
-}
