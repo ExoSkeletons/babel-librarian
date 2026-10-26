@@ -4,8 +4,6 @@ import './Desk.css'
 import { states } from '../config/librarian'
 import { generateAnswer, getLocation, dialogFor } from '../library'
 
-import { WallPage } from './WallPage'
-
 import { NavLink } from 'react-router-dom'
 
 
@@ -60,7 +58,6 @@ export function Desk() {
             <NavLink to="/browse/0/0">Wall</NavLink>
             <NavLink to="/browse/0/0/0/0">Book</NavLink>
         </nav>
-        <WallPage room={'a23ff4ccgsg545'} wall={76}/>      
     </main>
   )
 }
