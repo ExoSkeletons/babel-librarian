@@ -1,14 +1,14 @@
 import { config } from '../config/library'
 
 import { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getText } from '../library'
 
 function generateFullPage(text) {
     return text + "#".repeat(config.dim.charsPerPage - text.length)
 }
 
-function BookPage({ text }) {
+function BookBody({ text }) {
     return (
         <main className="book">
             <h1>{text}</h1>
@@ -16,9 +16,10 @@ function BookPage({ text }) {
     )
 }
 
-function BookNavigation({ i, n0 = 0, n, route, exitRoute }) {
+function BookNavigation({ i, n0 = 0, n, route }) {
+    const navigate = useNavigate()
     i = Number(i)
-    i = Math.max(n0, Math.min(i, n - 1))
+    i = Math.max(0, Math.min(i, n - 1))
     const hasPrev = i > n0
     const hasNext = i < n - 1
 
@@ -26,7 +27,7 @@ function BookNavigation({ i, n0 = 0, n, route, exitRoute }) {
         <nav aria-label="Book page navigation">
                 {(hasPrev 
                     ? (
-                    <Link to={`${route}/0`}>
+                    <Link to={`${route}/0`} replace>
                         {'<<'}
                     </Link>
                     )
@@ -35,7 +36,7 @@ function BookNavigation({ i, n0 = 0, n, route, exitRoute }) {
                 <span> </span>
                 {(hasPrev 
                     ? (
-                    <Link to={`${route}/${i - 1}`}>
+                    <Link to={`${route}/${i - 1}`} replace>
                         {'<'}
                     </Link>
                     )
@@ -45,14 +46,14 @@ function BookNavigation({ i, n0 = 0, n, route, exitRoute }) {
                 <span> {i + 1}/{n} </span>
 
                 {(hasNext 
-                    ? <Link  to={`${route}/${i + 1}`}>
+                    ? <Link  to={`${route}/${i + 1}`} replace>
                         {'>'}
                     </Link> 
                     : <span/>
                 )}
                 <span> </span>
                 {(hasNext 
-                    ? <Link to={`${route}/${n - 1}`}>
+                    ? <Link to={`${route}/${n - 1}`} replace>
                         {'>>'}
                     </Link>
                     : <span/>
@@ -60,7 +61,7 @@ function BookNavigation({ i, n0 = 0, n, route, exitRoute }) {
                 
                 <span> </span>
                 
-                <Link to={exitRoute}>x</Link>
+                <button type="button" onClick={() => navigate(-1)}>Back</button>
             </nav>
     )
 }
@@ -104,12 +105,11 @@ export function Book() {
         <main className="book">
             <p>Book {book} Room: {room} Wall: {wall} Shelf: {shelf} Page: {page}</p>
             
-            <BookPage text={generateFullPage(text)} />
+            <BookBody text={generateFullPage(text)} />
             
             <BookNavigation 
                 i={page} n={config.dim.pagesPerBook}
                 route={`/browse/${room}/${wall}/${shelf}/${book}`}
-                exitRoute={`/browse/${room}/${wall}/${shelf}`}
             />
         </main>
     )
