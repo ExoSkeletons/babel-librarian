@@ -27,7 +27,7 @@ export const states = {
       '{{affirmation}} Your answer awaits at {{location}}.',
       '{{affirmation}} You\'ll find your answer at {{location}}.',
       '{{affirmation}} I believe at {{location}} you\'ll find your answer...',
-      '{{affirmation}} Perhapes {{location}} will help you out...',
+      '{{wonder}} Perhapes {{location}} will help you out...',
       '{{affirmation}} it is at {{location}} that you may find what you seek...',
     ],
     canAsk: true,

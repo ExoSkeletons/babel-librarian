@@ -30,22 +30,28 @@ export function Desk() {
   }
 
   return (
-    <main className="desk">
-        <section className="layout">
-            <section className="question-panel">
-                <div className="dialog">{dialog}</div>
+    <main className="bg">
+        <nav>
+            <NavLink to="/browse">Browse</NavLink>
+            <NavLink to="/browse/0">Room</NavLink>
+            <NavLink to="/browse/0/0">Wall</NavLink>
+            <NavLink to="/browse/0/0/0/0">Book</NavLink>
+        </nav>
+        <section className="desk">
+            <div className="dialog">
+                <p>{dialog}</p>
 
                 <form onSubmit={onSubmitQuestion}>
                     <input
-                    disabled={!phase.canAsk}
-                    type="text"
-                    value={question}
-                    onChange={(event) => setQuestion(event.target.value)}
-                    placeholder="Ask a question..."
+                        disabled={!phase.canAsk}
+                        type="text"
+                        value={question}
+                        onChange={(event) => setQuestion(event.target.value)}
+                        placeholder="Ask a question..."
                     />
                     <button type="submit">{phase.askText}</button>
                 </form>
-            </section>
+            </div>
 
             <img
             className="librarian"
@@ -53,12 +59,6 @@ export function Desk() {
             alt="Librarian"
             />
         </section>
-        <nav>
-            <NavLink to="/browse">Browse</NavLink>
-            <NavLink to="/browse/0">Room</NavLink>
-            <NavLink to="/browse/0/0">Wall</NavLink>
-            <NavLink to="/browse/0/0/0/0">Book</NavLink>
-        </nav>
     </main>
   )
 }
