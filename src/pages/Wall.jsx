@@ -1,12 +1,12 @@
 import { config } from '../config/library'
-import { isValidRoomId } from '../library'
+import { isValidRoom } from '../library'
 import { Shelf } from '../components/ShelfPreview'
 
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 export function Doorway({ room, wall, replace = true }) {
-    const isValid = isValidRoomId(room)
+    const isValid = isValidRoom(room)
 
     if (!isValid) {
         return (
