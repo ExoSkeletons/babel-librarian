@@ -42,23 +42,7 @@ export async function getLocation(text) {
   return location
 }
 
-function formatLocation(location) {
-  const {room, wall, shelf, book, page} = location
-  return (
-    "room "        + room + "," +
-    " on wall "   + wall +
-    " shelf "      + shelf + "," +
-    " in book "    + book +
-    " at page "    + page + "."
-  )
-}
-
-export function dialogFor(state, data = {}) {
-  const lines = state.lines
-  const line = lines[Math.floor(Math.random() * lines.length)]
-
-  return line
-    .replace('{{location}}', formatLocation(data.location ?? {}))
-    // .replace('{{wonder}}', random wonder)
-    // .replace('{{affermation}}', random affirmation)
+export function isValidRoomId(roomId) {
+  const number = Number(roomId)
+  return Number.isFinite(number) && roomId >= 0
 }
