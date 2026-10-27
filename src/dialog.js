@@ -39,10 +39,10 @@ function formatLocation(location) {
   const {room, wall, shelf, book, page} = location
   return (
     "room "        + room + "," +
-    " on wall "   + wall +
-    " shelf "      + shelf + "," +
-    " in book "    + book +
-    " at page "    + page + "."
+    " on wall "   + (wall + 1) +
+    " shelf "      + (shelf + 1) + "," +
+    " in book "    + (book + 1) +
+    " at page "    + (page + 1) + "."
   )
 }
 
