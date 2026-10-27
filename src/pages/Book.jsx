@@ -4,79 +4,94 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getText } from '../library'
 
+import './Book.css'
+
 function generateFullPage(text) {
     return text + "#".repeat(config.dim.charsPerPage - text.length)
 }
 
-function BookBody({ text }) {
+function BookBody({ text, book, page }) {
     return (
-        <main className="book">
-            <h1>{text}</h1>
-        </main>
+        <article className="reader-book" aria-label="Book page">
+            <div className="reader-book-body">
+                <p>{text}</p>
+            </div>
+            <hr className="reader-book-divider" />
+            <footer className="reader-book-footer">
+                <span>Book {book}</span>
+                <em className="reader-book-page-count" aria-live="polite">
+                    - {page} -
+                </em>
+                <span aria-hidden="true" />
+            </footer>
+        </article>
     )
 }
 
-function BookNavigation({ i, n0 = 0, n, route }) {
-    const navigate = useNavigate()
-    i = Number(i)
-    i = Math.max(0, Math.min(i, n - 1))
-    const hasPrev = i > n0
-    const hasNext = i < n - 1
+function Nav({ to, disabled, label, children }) {
+    return disabled
+        ? <button type="button" className="reader-nav" aria-label={label} disabled>
+                {children}
+        </button>
+        : <Link className="reader-nav" to={to} replace aria-label={label}>
+            {children}
+        </Link>
+}
 
+function BookNavigation({ i, n, route }) {
+    const pageIndex = Math.max(0, Math.min(Number(i), n - 1))
+    const hasPrev = pageIndex > 0
+    const hasNext = pageIndex < n - 1
     return (
-        <nav aria-label="Book page navigation">
-                {(hasPrev 
-                    ? (
-                    <Link to={`${route}/0`} replace>
-                        {'<<'}
-                    </Link>
-                    )
-                    : <span/>
-                )}
-                <span> </span>
-                {(hasPrev 
-                    ? (
-                    <Link to={`${route}/${i - 1}`} replace>
-                        {'<'}
-                    </Link>
-                    )
-                    : <span/>
-                )}
-
-                <span> {i + 1}/{n} </span>
-
-                {(hasNext 
-                    ? <Link  to={`${route}/${i + 1}`} replace>
-                        {'>'}
-                    </Link> 
-                    : <span/>
-                )}
-                <span> </span>
-                {(hasNext 
-                    ? <Link to={`${route}/${n - 1}`} replace>
-                        {'>>'}
-                    </Link>
-                    : <span/>
-                )}
-                
-                <span> </span>
-                
-                <button type="button" onClick={() => navigate(-1)}>Back</button>
-            </nav>
+        <nav className="reader-navigation" aria-label="Book page navigation">
+            <div>
+                <Nav
+                    disabled={!hasPrev} label="First page"
+                    to={`${route}/0`}
+                >
+                    «
+                </Nav>
+                <Nav
+                    disabled={!hasPrev} label="Previous page"
+                    to={`${route}/${pageIndex - 1}`}
+                >
+                    ‹
+                </Nav>
+            </div>
+            <div className="reader-navigation-group">
+                <Nav
+                    disabled={!hasNext} label="Next page"
+                    to={`${route}/${pageIndex + 1}`}
+                >
+                    ›
+                </Nav>
+                <Nav
+                    disabled={!hasNext} label="Last page"
+                    to={`${route}/${n - 1}`}
+                >
+                    »
+                </Nav>
+            </div>
+        </nav>
     )
 }
 
 export function Book() {
-    const {
+    let {
         room = '0',
         wall = 0,
         shelf = 0,
         book = 0,
         page = 0
     } = useParams()
+    wall = Number(wall)
+    shelf = Number(shelf)
+    book = Number(book)
+    page = Number(page)
 
     const [text, setText] = useState('')
     const [error, setError] = useState(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         let cancelled = false
@@ -102,13 +117,30 @@ export function Book() {
     if (text === null) return <p aria-live="polite">...</p>
 
     return (
-        <main className="book">
-            <p>Book {book} Room: {room} Wall: {wall} Shelf: {shelf} Page: {page}</p>
-            
-            <BookBody text={generateFullPage(text)} />
-            
-            <BookNavigation 
-                i={page} n={config.dim.pagesPerBook}
+        <main className="reader">
+            <header className="reader-heading">
+                <p className="reader-location">
+                    Room {room}
+                <span aria-hidden="true"> / </span>
+                    Wall {wall + 1}
+                <span aria-hidden="true"> / </span>
+                    Shelf {shelf + 1}
+                </p>
+                <button
+                    className="reader-nav"
+                    type="button"
+                    onClick={() => navigate(-1)}
+                >
+                    Close
+                </button>
+            </header>
+            <h2>Book {book}</h2>
+
+            <BookBody text={generateFullPage(text)} book={book} page={page + 1} />
+
+            <BookNavigation
+                i={page}
+                n={config.dim.pagesPerBook}
                 route={`/browse/${room}/${wall}/${shelf}/${book}`}
             />
         </main>

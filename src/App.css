@@ -8,8 +8,3 @@ html, body, #root {
   min-height: 100%;
   width: 100%;
 }
-
-body {
-  background: #100d0b;
-  color: #f5e8ce;
-}
