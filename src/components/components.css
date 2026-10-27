@@ -3,7 +3,6 @@
 .wall {
     display: flex;
     flex-direction: column;
-    gap: 12px;
     padding: 16px;
 }
 
@@ -12,12 +11,12 @@
     padding: 0;
     list-style: none;
     background: linear-gradient(to bottom, #b89b68, #573814);
-    border: 15px solid #3b2400;
+    border: 8px solid #3b2400;
     border-radius: 8px;
 }
 
 .shelf li + li {
-    margin-left: -14px;
+    margin-left: -20px;
 }
 
 .book-spine {
