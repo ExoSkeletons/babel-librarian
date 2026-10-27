@@ -26,13 +26,14 @@ export function Doorway({ room, wall, replace = true }) {
     )
 }
 
-function Shelves({ room, wall }) {
+function BookWall({ room, wall }) {
     const { shelf = 0 } = useParams()
     const navigate = useNavigate()
     const [selectedShelf, selectShelf] = useState(Number(shelf))
 
     return (
         <section className="wall">
+            <h2>Wall {wall}</h2>
             {Array.from({ length: config.dim.shelvesPerWall }, (_, si) => (
                 <Shelf
                     key={si}
@@ -106,11 +107,11 @@ export function Wall() {
 
     return (
         <main>
-            {w.type === 'doorway' ? (
-                <Doorway room={room + (w.dir === 'next' ? 1 : -1)} wall={w.path} />
-            ) : (
-                <Shelves room={room} wall={w.wi} />
-            )}
+            <h1>Room {room}</h1>
+            {w.type === 'doorway'
+                ? <Doorway room={room + (w.dir === 'next' ? 1 : -1)} wall={w.path} />
+                : <BookWall room={room} wall={w.wi} />
+            }
             <WallNavigation room={room} walls={walls} wi={wi} />
         </main>
     )
