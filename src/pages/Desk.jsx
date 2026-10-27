@@ -5,13 +5,15 @@ import { states } from '../config/librarian'
 import { generateAnswer, getLocation } from '../library'
 import { dialogFor } from '../dialog'
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 
 export function Desk() {
+  const navigate = useNavigate()
   const [phase, setPhase] = useState(states.idle)
   const [dialog, setDialog] = useState(() => dialogFor(states.idle))
   const [question, setQuestion] = useState('')
+  const [answerLocation, setAnswerLocation] = useState(null)
 
   async function onSubmitQuestion(event) {
     event.preventDefault()
@@ -20,12 +22,15 @@ export function Desk() {
 
     setPhase(states.thinking)
     setDialog(dialogFor(states.thinking))
+    setAnswerLocation(null)
 
     const answer = await generateAnswer(question)
+    setQuestion('')
     console.log(answer);
     const location = await getLocation(answer)
 
     setPhase(states.answering)
+    setAnswerLocation(location)
     setDialog(dialogFor(states.answering, { location }) + "\r\n" + "Anything else I can do for you?")
   }
 
@@ -49,7 +54,20 @@ export function Desk() {
                         onChange={(event) => setQuestion(event.target.value)}
                         placeholder="Ask a question..."
                     />
-                    <button type="submit">{phase.askText}</button>
+                    <div>
+                        {phase.canAsk && <button type="submit">{phase.askText}</button>}
+                        {answerLocation && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const { room, wall, shelf, book, page } = answerLocation
+                                    navigate(`/browse/${room}/${wall}/${shelf}/${book}/${page}`)
+                                }}
+                            >
+                                Visit
+                            </button>
+                        )}
+                    </div>
                 </form>
             </div>
 
