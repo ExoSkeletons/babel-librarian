@@ -1,4 +1,4 @@
-import { config } from "./config/gemini";
+import { config } from "../config/gemini";
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({

@@ -3,7 +3,7 @@ const maxChar = 15
 
 export const config = {
   dim: {
-    pagesPerBook: 100,
+    pagesPerBook: 600,
     booksPerShelf: 10,
     shelvesPerWall: 10,
     wallsPerRoom: 4, // 6-2

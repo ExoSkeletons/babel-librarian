@@ -1,5 +1,5 @@
-import { generate } from './gemini'
-import { config } from './config/library'
+import { generate } from '../services/gemini'
+import { config } from '../config/library'
 
 export async function generateAnswer(question) {
   return generate(question, config.llm.systemPrompt)

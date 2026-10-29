@@ -2,8 +2,8 @@ import { useState } from 'react'
 import './Desk.css'
 
 import { states } from '../config/librarian'
-import { generateAnswer, getLocation } from '../library'
-import { dialogFor } from '../dialog'
+import { generateAnswer, getLocation } from '../app/library'
+import { dialogFor } from '../app/dialog'
 
 import { NavLink, useNavigate } from 'react-router-dom'
 
