@@ -41,8 +41,6 @@ async function pack({room, wall, shelf, book, page}) {
 
 async function unpack(id) {
   if (!isValidId(id)) return null
-  // todo: unpack large number into room, wall, shelf, book, page
-  // for now, return a hardcoded location
 
   // We treat the uuid as the exact unique identifier for a page.
   //    we can derive the room, wall, shelf, book, and (relative) page from it.
@@ -56,13 +54,14 @@ async function unpack(id) {
   // To get our book number, we divide the uuid by the pages in a book
   //    (i.e pagesPerBook). this gives us how many 'books' worth of pages we passed, so then to get the book relative to the shelf, we simply % by booksPerShelf.
   // Thus finally to get our page number, we simply % by pagesPerBook.
-  return {
-    room: '45605',
-    wall: 3,
-    shelf: 2,
-    book: 6,
-    page: 76,
-  }
+
+  const page  = id % dim.pagesPerBook
+  const book  = (id / dim.pagesPerBook) % dim.booksPerShelf
+  const shelf = (id / (dim.pagesPerShelf)) % dim.shelvesPerWall
+  const wall  = (id / (dim.pagesPerWall)) % dim.wallsPerRoom
+  const room  = id / dim.pagesPerRoom
+
+  return { room, wall, shelf, book, page }
 }
 
 export async function getText(location) {
