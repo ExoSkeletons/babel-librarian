@@ -1,13 +1,13 @@
-import { config } from '../config/library'
+import { dim } from '../config/library'
 
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getText } from '../library'
+import { getText } from '../app/library'
 
 import './Book.css'
 
 function generateFullPage(text) {
-    return text + "#".repeat(config.dim.charsPerPage - text.length)
+    return text + "#".repeat(dim.charsPerPage - text.length)
 }
 
 function BookBody({ text, book, page }) {
@@ -140,7 +140,7 @@ export function Book() {
 
             <BookNavigation
                 i={page}
-                n={config.dim.pagesPerBook}
+                n={dim.pagesPerBook}
                 route={`/browse/${room}/${wall}/${shelf}/${book}`}
             />
         </main>

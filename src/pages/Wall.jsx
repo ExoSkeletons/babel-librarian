@@ -1,5 +1,5 @@
-import { config } from '../config/library'
-import { isValidRoom } from '../library'
+import { dim } from '../config/library'
+import { isValidRoom } from '../app/library'
 import { Shelf } from '../components/ShelfPreview'
 
 import { useState } from 'react'
@@ -34,10 +34,10 @@ function BookWall({ room, wall }) {
     return (
         <section className="wall">
             <h2>Wall {wall}</h2>
-            {Array.from({ length: config.dim.shelvesPerWall }, (_, si) => (
+            {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
                 <Shelf
                     key={si}
-                    n={config.dim.booksPerShelf}
+                    n={dim.booksPerShelf}
                     onClick={() => selectShelf(si)}
                     onBookClick={(book) => {
                         if (selectedShelf === si)

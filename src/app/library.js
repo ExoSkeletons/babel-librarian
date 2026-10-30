@@ -1,8 +1,17 @@
 import { generate } from '../services/gemini'
-import { config } from '../config/library'
+import { llm, dim } from '../config/library'
 
 export async function generateAnswer(question) {
-  return generate(question, config.llm.systemPrompt)
+  return generate(question, llm.systemPrompt)
+}
+
+
+function randomise(n) {
+  return n // todo: find some reversable randomiser
+}
+
+function invRadomise(r) {
+  return r // todo: find some reversable randomiser
 }
 
 
@@ -60,7 +69,9 @@ export async function getText(location) {
   console.log(`location=${JSON.stringify(location)}`)
   const id = await pack(location)
   console.log(`location -pack-> id=${id}`)
-  const text = await decode(id)
+  const iid = await randomise(id)
+  console.log(`rid -inverted rand-> iid=${iid}`)
+  const text = await decode(iid)
   console.log(`id -decode-> text=${text}`)
   return text
 }
@@ -69,7 +80,9 @@ export async function getLocation(text) {
   console.log(`text=${text}`)
   const id = await encode(text)
   console.log(`text -encoded-> id=${id}`)
-  const location = await unpack(id)
+  const rid = await randomise(id)
+  console.log(`id -r-> rid=${rid}`)
+  const location = await unpack(rid)
   console.log(`id -unpacked-> location=${JSON.stringify(location)}`)
   return location
 }
