@@ -61,7 +61,7 @@ export function Desk() {
                                 type="button"
                                 onClick={() => {
                                     const { room, wall, shelf, book, page } = answerLocation
-                                    navigate(`/browse/${room}/${wall}/${shelf}/${book}/${page}`)
+                                    navigate(`/browse/${room.toString()}/${wall}/${shelf}/${book}/${page}`)
                                 }}
                             >
                                 Visit

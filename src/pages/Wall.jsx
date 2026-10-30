@@ -21,7 +21,7 @@ export function Doorway({ room, wall, replace = true }) {
             to={`/browse/${room}/${wall ?? ''}`}
             replace={replace}
         >
-            Door to: Room {room}
+            Door to: Room {room.toString()}
         </Link>
     )
 }
@@ -73,17 +73,16 @@ function WallNavigation({ room, walls, wi }) {
 }
 
 export function Wall() {
-    let { room = '0', wall = '0', dir } = useParams()
+    const { room: roomParam = '0', wall: wallParam = '0', dir: dirParam } = useParams()
+    if (!isValidRoom(roomParam)) return <p role="alert">Invalid room number.</p>
 
-    room = Number(room)
-    room = Number.isFinite(room) ? room : 0
-
-    const wn = config.dim.wallsPerRoom
+    const room = BigInt(roomParam)
+    const wn = dim.wallsPerRoom
     const mid = Math.floor(wn / 2)
-    wall = Number(wall)
+    let wall = Number(wallParam)
     wall = Number.isInteger(wall) ? wall : 0
 
-    dir = dir === 'prev' || dir === 'next' ? dir : null
+    const dir = dirParam === 'prev' || dirParam === 'next' ? dirParam : null
 
     const walls = [
         // entrance door
@@ -107,9 +106,9 @@ export function Wall() {
 
     return (
         <main>
-            <h1>Room {room}</h1>
+            <h1>Room {room.toString()}</h1>
             {w.type === 'doorway'
-                ? <Doorway room={room + (w.dir === 'next' ? 1 : -1)} wall={w.path} />
+                ? <Doorway room={room + (w.dir === 'next' ? 1n : -1n)} wall={w.path} />
                 : <BookWall room={room} wall={w.wi} />
             }
             <WallNavigation room={room} walls={walls} wi={wi} />

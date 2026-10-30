@@ -1,4 +1,4 @@
-import { dim } from '../config/library'
+import { pageDim, dim } from '../config/library'
 
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -6,8 +6,8 @@ import { getText } from '../app/library'
 
 import './Book.css'
 
-function generateFullPage(text) {
-    return text + "#".repeat(dim.charsPerPage - text.length)
+function generateFullPageString(text) {
+    return text + "#".repeat(Math.max(0, pageDim.charsPerPage - text.length))
 }
 
 function BookBody({ text, book, page }) {
@@ -77,17 +77,13 @@ function BookNavigation({ i, n, route }) {
 }
 
 export function Book() {
-    let {
-        room = '0',
-        wall = 0,
-        shelf = 0,
-        book = 0,
-        page = 0
-    } = useParams()
-    wall = Number(wall)
-    shelf = Number(shelf)
-    book = Number(book)
-    page = Number(page)
+    const params = useParams()
+    const roomParam = params.room ?? '0'
+    const room = isValidRoom(roomParam) ? BigInt(roomParam) : 0n
+    const wall = Number(params.wall ?? 0)
+    const shelf = Number(params.shelf ?? 0)
+    const book = Number(params.book ?? 0)
+    const page = Number(params.page ?? 0)
 
     const [text, setText] = useState('')
     const [error, setError] = useState(null)
@@ -120,7 +116,7 @@ export function Book() {
         <main className="reader">
             <header className="reader-heading">
                 <p className="reader-location">
-                    Room {room}
+                    Room {room.toString()}
                 <span aria-hidden="true"> / </span>
                     Wall {wall + 1}
                 <span aria-hidden="true"> / </span>
@@ -136,12 +132,12 @@ export function Book() {
             </header>
             <h2>Book {book}</h2>
 
-            <BookBody text={generateFullPage(text)} book={book} page={page + 1} />
+            <BookBody text={generateFullPageString(text)} book={book} page={page + 1} />
 
             <BookNavigation
                 i={page}
                 n={dim.pagesPerBook}
-                route={`/browse/${room}/${wall}/${shelf}/${book}`}
+                route={`/browse/${room.toString()}/${wall}/${shelf}/${book}`}
             />
         </main>
     )
