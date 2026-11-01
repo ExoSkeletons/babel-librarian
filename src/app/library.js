@@ -3,7 +3,7 @@ import { llm, dim, alphabet } from '../config/library'
 
 export const itoc = Array.from(alphabet)
 export const ctoi = Object.fromEntries(itoc.map((char, index) => [char, index]))
-
+const ALPHABET_BASE = BigInt(alphabet.length)
 
 export async function generateAnswer(question) {
   const llmResponse = await generate(question, llm.systemPrompt)
@@ -33,60 +33,88 @@ export function isValidRoom(room) {
 }
 
 async function encode(text) {
-  if (typeof text !== 'string') {
-    throw new TypeError('Text to encode must be a string')
-  }
+  if (typeof text !== 'string') throw new TypeError('Text to encode must be a string')
 
-  const base = BigInt(alphabet.length)
+  /* 
+
+  Encoding scheme:
+
+    Treat the text as a base-B number (B is the length of the alphabet).
+    To avoid confusion with leading 0s, we map the values to id ranges based on the length of the string:
+    
+      Text length	  Offset	             IDs for that length
+
+        0             0	                   0
+        1             1	                   1 -- B^1                1_B -- 10_B
+        2             1 + B^1	             1 + B^1 –- B^2          11_B -- 100_B
+        3             1 + B^1 + B^2	       1 + B^1 + B^2 –- B^3    111_B -- 1000_B
+
+        ...           ...                  ...                     ...   
+
+        n             S i[0..n-1] B^i      offset –- B^n           111...1_B -- 1000...0_B
+
+    Thus the final id = `decoded string value` + `offset for that length`.
+
+    Ex:
+      both `a` and `aa` have a base-B value of 0 (0, 0 + 0 * B),
+      but `a` lands in length = 1 range (offset 1), while `aa` lands in length=2 range (offset B + 1).
+
+    So generally the alphabet ordering is:
+      a b c ... z,                                          (total of B ids for length=1)
+      aa ab ac ... az ba bb bc ... bz ... ... zz            (toal of B^2 ids for length=2)
+      aaa aab aac ... aaz aba abb abc ... abz ... ... zzz   (total of B^3 ids for length=3)
+      ...
+    and so on.
+
+  */
+
+  // calc base-B value
   let value = 0n
-  let length = 0
-
-  for (const char of text) {
-    const digit = ctoi[char]
-    if (digit === undefined) {
-      throw new Error(`Unsupported character in text: ${char}`)
-    }
-    value = value * base + BigInt(digit)
-    length += 1
+  for (const c of text) {
+    const d = ctoi[c]
+    if (d === undefined) throw new Error(`Unsupported character in text: ${c}`)
+    
+    value *= ALPHABET_BASE
+    value += BigInt(d)
   }
 
+  // calc offset
   let offset = 0n
-  let lengthRange = 1n
-  for (let index = 0; index < length; index += 1) {
-    offset += lengthRange
-    lengthRange *= base
-  }
+  for (let i = 0, bi = 1n; i < text.length; i += 1, bi *= ALPHABET_BASE)
+    offset += bi
 
-  return offset + value
+  const id = offset + value
+  return id
 }
 
 async function decode(id) {
-  if (!isValidId(id)) {
-    throw new TypeError('ID must be a non-negative BigInt')
-  }
+  if (!isValidId(id)) throw new TypeError('ID must be a non-negative BigInt')
 
-  const base = BigInt(alphabet.length)
-  let value = id
+  // calc length of string, by finding the largest power of B that is <= id
   let offset = 0n
-  let lengthRange = 1n
+  let bi = 1n
   let length = 0
-
-  while (value >= offset + lengthRange) {
-    offset += lengthRange
-    lengthRange *= base
+  while (id >= offset + bi) {
+    offset += bi
+    bi *= ALPHABET_BASE
     length += 1
   }
 
-  value -= offset
+  // extract encoded value
+  let value = id - offset
+
+  // decode chars from value base B digits.
+  // since we now know the string length must be `length`,
+  // iterating over length ensures we recover leading zeros.
   const chars = new Array(length)
-  for (let index = length - 1; index >= 0; index -= 1) {
-    const digit = Number(value % base)
-    const char = itoc[digit]
-    if (char === undefined) {
-      throw new Error('Invalid digit in page ID')
-    }
-    chars[index] = char
-    value /= base
+  for (let i = length - 1; i >= 0; i -= 1) {
+    const d = Number(value % ALPHABET_BASE)
+
+    const c = itoc[d]
+    if (c === undefined) throw new Error('Invalid digit in page ID')
+    
+    chars[i] = c
+    value /= ALPHABET_BASE
   }
 
   return chars.join('')
@@ -116,18 +144,22 @@ async function pack({room, wall, shelf, book, page}) {
 async function unpack(id) {
   if (!isValidId(id)) return null
 
-  // We treat the uuid as the exact unique identifier for a page.
-  //    we can derive the room, wall, shelf, book, and (relative) page from it.
-  // To get the room number, we divide the uuid by the amount of pages in a room.
-  //    (i.e pagesPerBook * booksPerShelf * shelvesPerWall * wallsPerRoom). this gives us effectivly how many 'rooms' worth of pages we passed.
-  // To get our wall number, we divide the uuid by the amount of pages in a wall
-  //    (i.e pagesPerBook * booksPerShelf * shelvesPerWall). this gives us how many 'walls' worth of pages we passed,
-  //    so then to get the wall relative to the room, we simply % by wallsPerRoom.
-  // To get our shelf number, we divide the uuid by the pages in a shelf
-  //    (i.e pagesPerBook * booksPerShelf).
-  // To get our book number, we divide the uuid by the pages in a book
-  //    (i.e pagesPerBook). this gives us how many 'books' worth of pages we passed, so then to get the book relative to the shelf, we simply % by booksPerShelf.
-  // Thus finally to get our page number, we simply % by pagesPerBook.
+  /*
+  
+  We treat the uuid as the exact unique identifier for a page.
+    we can derive the room, wall, shelf, book, and (relative) page from it.
+  To get the room number, we divide the uuid by the amount of pages in a room.
+    (i.e pagesPerBook * booksPerShelf * shelvesPerWall * wallsPerRoom). this gives us effectivly how many 'rooms' worth of pages we passed.
+  To get our wall number, we divide the uuid by the amount of pages in a wall
+    (i.e pagesPerBook * booksPerShelf * shelvesPerWall). this gives us how many 'walls' worth of pages we passed,
+    so then to get the wall relative to the room, we simply % by wallsPerRoom.
+  To get our shelf number, we divide the uuid by the pages in a shelf
+    (i.e pagesPerBook * booksPerShelf).
+  To get our book number, we divide the uuid by the pages in a book
+    (i.e pagesPerBook). this gives us how many 'books' worth of pages we passed, so then to get the book relative to the shelf, we simply % by booksPerShelf.
+  Thus finally to get our page number, we simply % by pagesPerBook.
+
+  */
 
   let remaining = id
   const page = Number(remaining % BigInt(dim.pagesPerBook))

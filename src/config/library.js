@@ -1,5 +1,4 @@
-export const alphabet = '1234567890' + 'abcdefghijklmnopqrstuvwxyz' + ',.'
-export const idBase = alphabet.length
+export const alphabet = 'abcdefghijklmnopqrstuvwxyz' + '1234567890' + ',.'
 
 
 const pagesPerBook =  600
