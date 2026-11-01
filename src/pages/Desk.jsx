@@ -24,14 +24,21 @@ export function Desk() {
     setDialog(dialogFor(states.thinking))
     setAnswerLocation(null)
 
-    const answer = await generateAnswer(question)
-    setQuestion('')
-    console.log(answer);
-    const location = await getLocation(answer)
+    try {
+        const answer = await generateAnswer(question)
+        setQuestion('')
+        console.log('answer: ', answer)
+        const location = await getLocation(answer)
 
-    setPhase(states.answering)
-    setAnswerLocation(location)
-    setDialog(dialogFor(states.answering, { location }) + "\r\n" + "Anything else I can do for you?")
+        setPhase(states.answering)
+        setAnswerLocation(location)
+        setDialog(dialogFor(states.answering, { location }) + "\r\n" + "Anything else I can do for you?")
+    } catch (error) {
+        console.error(error)
+        // TODO: show error to user
+        setPhase(states.idle)
+        setDialog(dialogFor(states.idle))
+    }
   }
 
   return (

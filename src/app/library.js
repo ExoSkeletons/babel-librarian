@@ -55,7 +55,7 @@ export function isValidRoom(room) {
   return false
 }
 
-async function encode(text) {
+function encode(text) {
   if (typeof text !== 'string') throw new TypeError('Text to encode must be a string')
 
   /* 
@@ -110,7 +110,7 @@ async function encode(text) {
   return id
 }
 
-async function decode(id) {
+function decode(id) {
   if (!isValidId(id)) throw new TypeError('ID must be a non-negative BigInt')
 
   // calc length of string, by finding the largest power of B that is <= id
