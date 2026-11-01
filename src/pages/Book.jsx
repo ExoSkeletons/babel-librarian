@@ -7,14 +7,21 @@ import { coerceLocation, getText, parseLocationParams } from '../app/library'
 import './Book.css'
 
 function generateFullPageString(text) {
-    return text + "#".repeat(Math.max(0, pageDim.charsPerPage - text.length))
+    return text + ".".repeat(Math.max(0, pageDim.charsPerPage - text.length))
 }
 
 function BookBody({ text, book, page }) {
     return (
         <article className="reader-book" aria-label="Book page">
             <div className="reader-book-body">
-                <p>{text}</p>
+                <p
+                    style={{
+                        '--page-width': `${pageDim.charsPerLine + 1}ch`,
+                        '--page-height': `${pageDim.linesPerPage}lh`,
+                    }}
+                >
+                    {text}
+                </p>
             </div>
             <hr className="reader-book-divider" />
             <footer className="reader-book-footer">

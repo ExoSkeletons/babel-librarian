@@ -36,9 +36,12 @@
 }
 
 .reader-book-body p {
-  width: 100%;
+  margin: 0 auto;
+  width: min(100%, var(--page-width));
+  min-height: var(--page-height);
   color: #352a20;
-  font: 1.2rem/1.9 Georgia, 'Times New Roman', serif;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  overflow-wrap: anywhere;
 }
 
 .reader-book-divider {
