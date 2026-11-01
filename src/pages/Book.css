@@ -43,6 +43,7 @@
   font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
   word-break: break-all;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .reader-book-divider {

@@ -1,4 +1,4 @@
-import { pageDim, dim } from '../config/library'
+import { pageDim, dim, alphabet } from '../config/library'
 import { coerceLocation, getText, parseLocationParams } from '../app/library'
 
 import { useState, useEffect } from 'react'
@@ -7,18 +7,21 @@ import seedrandom from 'seedrandom'
 
 import './Book.css'
 
-function generateFullPageString(text, randomisePosition = true) {
+function generateFullPageString(text, randomisePosition = true, padding = alphabet) {
     let pageText = text
 
     const r = seedrandom(text)
 
-    if (randomisePosition) {
-        const position = (pageDim.charsPerPage - text.length) * r()
-        const pad = '-'
-        const prefix = pad.repeat(Math.max(0, Math.floor(position)))
-        const suffix = pad.repeat(Math.max(0, pageDim.charsPerPage - prefix.length - text.length))
-        pageText = prefix + text + suffix
-    }
+    const sub = Math.max(0, pageDim.charsPerPage - text.length)
+    const position = randomisePosition ? Math.floor(r() * (sub + 1)) : 0
+    
+    const prefix = Array.from({ length: position }, () =>
+        padding[Math.floor(r() * padding.length)]
+    ).join('')
+    const suffix = Array.from({ length: sub - position }, () =>
+        padding[Math.floor(r() * padding.length)]
+    ).join('')
+    pageText = prefix + pageText + suffix
 
     const lines = []
     for (let i = 0; i < pageText.length; i += pageDim.charsPerLine)
