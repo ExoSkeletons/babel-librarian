@@ -1,4 +1,4 @@
-export const alphabet = 'abcdefghijklmnopqrstuvwxyz' + '1234567890' + ',.'
+export const alphabet = 'abcdefghijklmnopqrstuvwxyz' + '1234567890' + ',. '
 
 
 const pagesPerBook =  600

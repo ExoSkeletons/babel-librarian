@@ -7,7 +7,20 @@ import { coerceLocation, getText, parseLocationParams } from '../app/library'
 import './Book.css'
 
 function generateFullPageString(text) {
-    return text + ".".repeat(Math.max(0, pageDim.charsPerPage - text.length))
+    let pageText = text
+
+    const position = (pageDim.charsPerPage - text.length) * Math.random() // todo: use seeded randomiser
+    const pad = '.'
+    const prefix = pad.repeat(Math.max(0, Math.floor(position)))
+    const suffix = pad.repeat(Math.max(0, pageDim.charsPerPage - prefix.length - text.length))
+    pageText = prefix + text + suffix
+
+    const lines = []
+    for (let i = 0; i < pageText.length; i += pageDim.charsPerLine)
+        lines.push(pageText.slice(i, i + pageDim.charsPerLine))
+    pageText = lines.join('\n')
+
+    return pageText
 }
 
 function BookBody({ text, book, page }) {

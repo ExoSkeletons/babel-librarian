@@ -41,6 +41,7 @@
   min-height: var(--page-height);
   color: #352a20;
   font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  word-break: break-all;
   overflow-wrap: anywhere;
 }
 
