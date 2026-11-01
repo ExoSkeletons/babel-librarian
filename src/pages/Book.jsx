@@ -28,7 +28,7 @@ function BookBody({ text, book, page }) {
     )
 }
 
-function Nav({ to, disabled, label, children }) {
+function Nav({ to, disabled = false, label, children }) {
     return disabled
         ? <button type="button" className="reader-nav" aria-label={label} disabled>
                 {children}
@@ -38,7 +38,7 @@ function Nav({ to, disabled, label, children }) {
         </Link>
 }
 
-function BookNavigation({ i, n, route }) {
+function BookPageNavigation({ i, n, route }) {
     const pageIndex = Math.max(0, Math.min(Number(i), n - 1))
     const hasPrev = pageIndex > 0
     const hasNext = pageIndex < n - 1
@@ -70,6 +70,29 @@ function BookNavigation({ i, n, route }) {
                     to={`${route}/${n - 1}`}
                 >
                     »
+                </Nav>
+            </div>
+        </nav>
+    )
+}
+
+function BookNavigation({ book, route }) {
+    return (
+        <nav className="reader-navigation" aria-label="Book navigation">
+            <div>
+                <Nav
+                    label="Previous book"
+                    to={`${route}/${book - 1}/0`}
+                >
+                    Previous book
+                </Nav>
+            </div>
+            <div className="reader-navigation-group">
+                <Nav
+                    label="Next book"
+                    to={`${route}/${book + 1}/0`}
+                >
+                    Next book
                 </Nav>
             </div>
         </nav>
@@ -129,10 +152,14 @@ export function Book() {
 
             <BookBody text={generateFullPageString(text)} book={book} page={page + 1} />
 
-            <BookNavigation
+            <BookPageNavigation
                 i={page}
                 n={dim.pagesPerBook}
                 route={`/browse/${room.toString()}/${wall}/${shelf}/${book}`}
+            />
+            <BookNavigation
+                book={book}
+                route={`/browse/${room.toString()}/${wall}/${shelf}`}
             />
         </main>
     )
