@@ -7,7 +7,7 @@ import seedrandom from 'seedrandom'
 
 import './Book.css'
 
-function generateFullPageString(text, randomisePosition = true, padding = alphabet) {
+function generateFullPageString(text, randomisePosition = true, padding = [' ']) {
     let pageText = text
 
     const r = seedrandom(text)

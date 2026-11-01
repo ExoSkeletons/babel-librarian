@@ -1,4 +1,29 @@
+const welcomes = [
+  'Welcome, friend.',
+  'Welcome to the Library.',
+  'Greetings, seeker of knowledge.',
+  'Ah, a visitor! Welcome.',
+  'Greetings, traveler. Welcome to the Library.',
+  'Welcome, curious mind.',
+]
 
+const offers = [
+  'What knowledge do you seek?',
+  'What brings you to us?',
+  'What are you looking for?',
+  'What\'s on your mind?',
+  'Seeking answers, are you?',
+  'What can I assist you with today?',
+  'What wisdom do you seek?',
+  'Is it knowledge you seek, or perhaps a story?',
+  'Is there something you wish to discover?',
+  'Are you in search of answers?',
+  'Could I help you find something?',
+  'Seek thou knowledge, or perhaps a tale?',
+  'What are thou looking for in the vast halls of the Library?',
+  'What knowledge dost thou seek?',
+  'What doth thyne heart desire?',
+]
 
 const wonders = [
   "Let me think...",
@@ -56,4 +81,6 @@ export function dialogFor(state, data = {}) {
     .replace('{{wonder}}', rFrom(wonders))
     .replace('{{recall}}', rFrom(recalls))
     .replace('{{affirmation}}', rFrom(affirmations))
+    .replace('{{welcome}}', rFrom(welcomes))
+    .replace('{{offer}}', rFrom(offers))
 }

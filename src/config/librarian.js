@@ -4,7 +4,10 @@ export const states = {
   idle: {
     img: librarianImg,
     lines: [
-      'Welcome to the Library. What knowledge do you seek?',
+      '{{welcome}}',
+      '{{welcome}} {{offer}}',
+      'The library knows all, Traveller.\n{{offer}}',
+      '{{offer}}\nThe library knows all.',
     ],
     canAsk: true,
     askText: 'Ask',
