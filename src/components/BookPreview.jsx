@@ -4,9 +4,13 @@ import bookIc from '../assets/book-spine.png'
 
 export function BookSpine({ title, onClick }) {
     return (
-        <section>
-            <img className='book-spine' src={bookIc} onClick={onClick}
+        <section className="book-spine">
+            <img
+                src={bookIc}
+                onClick={onClick}
+                alt={`Book ${title}`}
             />
+            <p>{title}</p>
         </section>
     )
 }

@@ -1,3 +1,5 @@
+import './Wall.css'
+
 import { dim } from '../config/library'
 import { coerceLocation, isValidRoom, parseLocationParams } from '../app/library'
 import { Shelf } from '../components/ShelfPreview'
@@ -33,33 +35,28 @@ function BookWall({ room, wall, shelf }) {
     return (
         <section className="wall">
             <h2>Wall {wall}</h2>
-            {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
-                <Shelf
-                    key={si}
-                    n={dim.booksPerShelf}
-                    onClick={() => selectShelf(si)}
-                    onBookClick={(book) => {
-                        if (selectedShelf === si)
-                            navigate(`/browse/${room}/${wall}/${si}/${book}`)
-                    }}
-                />
-            ))}
+            <div className="shelves">
+                {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
+                    <Shelf
+                        key={si}
+                        n={dim.booksPerShelf}
+                        onClick={() => selectShelf(si)}
+                        onBookClick={(book) => {
+                            //if (selectedShelf === si)
+                                navigate(`/browse/${room}/${wall}/${si}/${book}`)
+                        }}
+                    />
+                ))}
+            </div>
         </section>
     )
 }
 
-function WallNavigation({ room, walls, wi }) {
+function WallFooter({ room }) {
     const navigate = useNavigate()
 
-    const n = walls.length
-    const pi = (wi - 1 + n) % n
-    const ni = (wi + 1) % n
-
     return (
-        <nav aria-label="Wall navigation">
-            <Link to={`/browse/${room}/${walls[pi].path}`} replace>{'<'}</Link>
-            <Link to={`/browse/${room}/${walls[ni].path}`} replace>{'>'}</Link>
-            <span> </span>
+        <nav>
             <button type="button" onClick={() => navigate(-1)}>Back</button>
             <span> </span>
             <Link to={`/browse/${room}`}>Back to Room</Link>
@@ -99,19 +96,27 @@ export function Wall() {
         : walls.findIndex((w) => w.wi === Number(wall))
     const w = walls[wi]
 
+    const n = walls.length
+    const pi = (wi - 1 + n) % n
+    const ni = (wi + 1) % n
+
     return (
         <main>
             <h1>Room {room.toString()}</h1>
-            {w.type === 'doorway'
-                ? <Doorway room={room + (w.dir === 'next' ? 1n : -1n)} wall={w.path} />
-                : <BookWall
-                    key={`${room}:${w.wi}:${shelf}`}
-                    room={room}
-                    wall={w.wi}
-                    shelf={shelf}
-                />
-            }
-            <WallNavigation room={room} walls={walls} wi={wi} />
+            <div>
+                <Link to={`/browse/${room}/${walls[pi].path}`} replace>{'<'}</Link>
+                {w.type === 'doorway'
+                    ? <Doorway room={room + (w.dir === 'next' ? 1n : -1n)} wall={w.path} />
+                    : <BookWall
+                        key={`${room}:${w.wi}:${shelf}`}
+                        room={room}
+                        wall={w.wi}
+                        shelf={shelf}
+                    />
+                }
+                <Link to={`/browse/${room}/${walls[ni].path}`} replace>{'>'}</Link>
+            </div>
+            <WallFooter room={room} />
         </main>
     )
 }

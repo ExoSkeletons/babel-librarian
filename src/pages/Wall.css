@@ -1,0 +1,17 @@
+
+main {
+    display: flex;
+    height: 100svh;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+div {
+    display: flex;
+    flex: 1 1 0;
+    justify-content: center;
+}
+
+.wall-footer {
+    flex: 0 0 auto;
+}
