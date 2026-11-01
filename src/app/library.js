@@ -5,9 +5,14 @@ export const itoc = Array.from(alphabet)
 export const ctoi = Object.fromEntries(itoc.map((char, index) => [char, index]))
 const ALPHABET_BASE = BigInt(alphabet.length)
 
+function sanitiseText(text) {
+  const sanitised = Array.from(text).filter(c => ctoi[c] !== undefined).join('')
+  return sanitised
+}
+
 export async function generateAnswer(question) {
   const llmResponse = await generate(question, llm.systemPrompt)
-  const sanitised = llmResponse // todo: remove chars not in alphabet
+  const sanitised = sanitiseText(llmResponse)
   return sanitised
 }
 
