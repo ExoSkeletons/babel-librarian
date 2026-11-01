@@ -1,19 +1,24 @@
 import { pageDim, dim } from '../config/library'
+import { coerceLocation, getText, parseLocationParams } from '../app/library'
 
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { coerceLocation, getText, parseLocationParams } from '../app/library'
+import seedrandom from 'seedrandom'
 
 import './Book.css'
 
-function generateFullPageString(text) {
+function generateFullPageString(text, randomisePosition = true) {
     let pageText = text
 
-    const position = (pageDim.charsPerPage - text.length) * Math.random() // todo: use seeded randomiser
-    const pad = '.'
-    const prefix = pad.repeat(Math.max(0, Math.floor(position)))
-    const suffix = pad.repeat(Math.max(0, pageDim.charsPerPage - prefix.length - text.length))
-    pageText = prefix + text + suffix
+    const r = seedrandom(text)
+
+    if (randomisePosition) {
+        const position = (pageDim.charsPerPage - text.length) * r()
+        const pad = '-'
+        const prefix = pad.repeat(Math.max(0, Math.floor(position)))
+        const suffix = pad.repeat(Math.max(0, pageDim.charsPerPage - prefix.length - text.length))
+        pageText = prefix + text + suffix
+    }
 
     const lines = []
     for (let i = 0; i < pageText.length; i += pageDim.charsPerLine)
