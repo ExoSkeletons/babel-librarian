@@ -11,6 +11,24 @@ export async function generateAnswer(question) {
   return sanitised
 }
 
+export function parseLocationParams(params) {
+  const location = { room: 0n, wall: 0, shelf: 0, book: 0, page: 0 }
+
+  if (typeof params.room === 'string' && /^\d+$/.test(params.room))
+    location.room = BigInt(params.room)
+
+  for (const c of ['wall', 'shelf', 'book', 'page']) {
+    const n = Number(params[c])
+    if (Number.isSafeInteger(n)) location[c] = n
+  }
+
+  return location
+}
+
+export function coerceLocation(location) {
+  return unpack(pack(location))
+}
+
 
 function randomise(n) {
   return n // todo: find some reversable randomiser
@@ -120,17 +138,11 @@ async function decode(id) {
   return chars.join('')
 }
 
-async function pack({room, wall, shelf, book, page}) {
+function pack({room, wall, shelf, book, page}) {
   if (typeof room !== 'bigint' || room < 0n)
     throw new TypeError('room must be a non-negative BigInt')
-  if (!Number.isInteger(wall) || wall < 0 || wall >= dim.wallsPerRoom)
-    throw new RangeError(`wall must be an integer from 0 to ${dim.wallsPerRoom - 1}`)
-  if (!Number.isInteger(shelf) || shelf < 0 || shelf >= dim.shelvesPerWall)
-    throw new RangeError(`shelf must be an integer from 0 to ${dim.shelvesPerWall - 1}`)
-  if (!Number.isInteger(book) || book < 0 || book >= dim.booksPerShelf)
-    throw new RangeError(`book must be an integer from 0 to ${dim.booksPerShelf - 1}`)
-  if (!Number.isInteger(page) || page < 0 || page >= dim.pagesPerBook)
-    throw new RangeError(`page must be an integer from 0 to ${dim.pagesPerBook - 1}`)
+  if (![wall, shelf, book, page].every(value => Number.isSafeInteger(value) && value >= 0))
+    throw new TypeError('wall, shelf, book, and page must be non-negative safe integers')
 
   return (
     BigInt(room) * BigInt(dim.pagesPerRoom) +
@@ -141,9 +153,7 @@ async function pack({room, wall, shelf, book, page}) {
   )
 }
 
-async function unpack(id) {
-  if (!isValidId(id)) return null
-
+function unpack(id) {
   /*
   
   We treat the uuid as the exact unique identifier for a page.
@@ -176,22 +186,22 @@ async function unpack(id) {
 
 export async function getText(location) {
   console.log(`location=${JSON.stringify(location, (_, value) => typeof value === 'bigint' ? value.toString() : value)}`)
-  const id = await pack(location)
+  const id = pack(location)
   console.log(`location -pack-> id=${id}`)
-  const iid = await randomise(id)
+  const iid = randomise(id)
   console.log(`rid -inverted rand-> iid=${iid}`)
-  const text = await decode(iid)
+  const text = decode(iid)
   console.log(`id -decode-> text=${text}`)
   return text
 }
 
 export async function getLocation(text) {
   console.log(`text=${text}`)
-  const id = await encode(text)
+  const id = encode(text)
   console.log(`text -encoded-> id=${id}`)
-  const rid = await randomise(id)
+  const rid = randomise(id)
   console.log(`id -r-> rid=${rid}`)
-  const location = await unpack(rid)
+  const location = unpack(rid)
   console.log(`id -unpacked-> location=${JSON.stringify(location, (_, value) => typeof value === 'bigint' ? value.toString() : value)}`)
   return location
 }

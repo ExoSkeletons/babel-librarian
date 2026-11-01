@@ -1,5 +1,5 @@
 import { dim } from '../config/library'
-import { isValidRoom } from '../app/library'
+import { coerceLocation, isValidRoom, parseLocationParams } from '../app/library'
 import { Shelf } from '../components/ShelfPreview'
 
 import { useState } from 'react'
@@ -26,10 +26,9 @@ export function Doorway({ room, wall, replace = true }) {
     )
 }
 
-function BookWall({ room, wall }) {
-    const { shelf = 0 } = useParams()
+function BookWall({ room, wall, shelf }) {
     const navigate = useNavigate()
-    const [selectedShelf, selectShelf] = useState(Number(shelf))
+    const [selectedShelf, selectShelf] = useState(shelf)
 
     return (
         <section className="wall">
@@ -73,16 +72,12 @@ function WallNavigation({ room, walls, wi }) {
 }
 
 export function Wall() {
-    const { room: roomParam = '0', wall: wallParam = '0', dir: dirParam } = useParams()
-    if (!isValidRoom(roomParam)) return <p role="alert">Invalid room number.</p>
-
-    const room = BigInt(roomParam)
+    const params = useParams()
+    const { room, wall, shelf } = coerceLocation(parseLocationParams(params))
+    
     const wn = dim.wallsPerRoom
     const mid = Math.floor(wn / 2)
-    let wall = Number(wallParam)
-    wall = Number.isInteger(wall) ? wall : 0
-
-    const dir = dirParam === 'prev' || dirParam === 'next' ? dirParam : null
+    const dir = params.dir === 'prev' || params.dir === 'next' ? params.dir : null
 
     const walls = [
         // entrance door
@@ -109,7 +104,12 @@ export function Wall() {
             <h1>Room {room.toString()}</h1>
             {w.type === 'doorway'
                 ? <Doorway room={room + (w.dir === 'next' ? 1n : -1n)} wall={w.path} />
-                : <BookWall room={room} wall={w.wi} />
+                : <BookWall
+                    key={`${room}:${w.wi}:${shelf}`}
+                    room={room}
+                    wall={w.wi}
+                    shelf={shelf}
+                />
             }
             <WallNavigation room={room} walls={walls} wi={wi} />
         </main>

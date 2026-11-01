@@ -2,7 +2,7 @@ import { pageDim, dim } from '../config/library'
 
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getText } from '../app/library'
+import { coerceLocation, getText, parseLocationParams } from '../app/library'
 
 import './Book.css'
 
@@ -78,12 +78,7 @@ function BookNavigation({ i, n, route }) {
 
 export function Book() {
     const params = useParams()
-    const roomParam = params.room ?? '0'
-    const room = isValidRoom(roomParam) ? BigInt(roomParam) : 0n
-    const wall = Number(params.wall ?? 0)
-    const shelf = Number(params.shelf ?? 0)
-    const book = Number(params.book ?? 0)
-    const page = Number(params.page ?? 0)
+    const { room, wall, shelf, book, page } = coerceLocation(parseLocationParams(params))
 
     const [text, setText] = useState('')
     const [error, setError] = useState(null)
