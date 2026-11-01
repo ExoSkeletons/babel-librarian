@@ -33,7 +33,7 @@ function BookWall({ room, wall, shelf }) {
     const [selectedShelf, selectShelf] = useState(shelf)
 
     return (
-        <section className="wall">
+        <section>
             <h2>Wall {wall}</h2>
             <div className="shelves">
                 {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
