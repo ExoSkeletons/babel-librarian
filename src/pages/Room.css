@@ -1,0 +1,10 @@
+main {
+    max-height: 100svh;
+}
+
+.walls {
+    display: flex;
+    flex-direction: row;
+    max-height: 100%;
+    overflow-y: scroll;
+}

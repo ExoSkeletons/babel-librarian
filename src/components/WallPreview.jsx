@@ -1,12 +1,16 @@
 import './components.css'
 
-import { config } from "../config/library"
+import { Shelf } from './ShelfPreview'
+
+import { dim } from "../config/library"
 
 export function Wall({ room, wall, onClick }) {
-    const shleves = Array.from({ length: config.dim.shelvesPerWall }, (_, i) => Shelf({ shelf:i, n:config.dim.booksPerShelf }))
+    const shleves = Array.from({ length: dim.shelvesPerWall }, (_, si) =>
+        <Shelf key={si} n={dim.wallsPerRoom} />
+    )
 
     return (
-        <main>
+        <main onClick={onClick}>
             {shleves}
         </main>
     )
