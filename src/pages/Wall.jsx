@@ -50,9 +50,7 @@ function BookWall({ room, wall, shelf }) {
     )
 }
 
-function WallFooter({ room }) {
-    const navigate = useNavigate()
-
+function WallFooter() {
     return (
         <nav>
             <Link to="/browse">Back to Map</Link>
