@@ -13,7 +13,7 @@ export function Shelf({ shelf, n, onClick, onBookClick }) {
                 }}
         >
             <BookSpine
-                title={i}
+                title={i + 1}
                 onClick={() => onBookClick(i)}
             />
         </li>
