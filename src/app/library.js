@@ -176,7 +176,7 @@ function unpack(id) {
 
   */
 
-  let remaining = id
+  let remaining = BigInt(id)
   const page = Number(remaining % BigInt(dim.pagesPerBook))
   remaining /= BigInt(dim.pagesPerBook)
   const book = Number(remaining % BigInt(dim.booksPerShelf))
