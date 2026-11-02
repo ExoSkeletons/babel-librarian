@@ -9,7 +9,9 @@
 .shelves {
     display: flex;
     flex: 1 1 0;
-    border: 8px solid black;
+    border: 8px solid #706047;
+    border-radius: 8px;
+    background: #706047;
     flex-direction: column;
     align-items: center;
     gap: 0;
@@ -25,7 +27,6 @@
     padding: 0;
     list-style: none;
     background: linear-gradient(to bottom, #b89b68, #573814);
-    border: 8px solid #3b2400;
     border-radius: 8px;
 }
 
