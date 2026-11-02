@@ -143,7 +143,7 @@ function decode(id) {
   return chars.join('')
 }
 
-function pack({room, wall, shelf, book, page}) {
+function pack({ room, wall, shelf, book, page }) {
   if (typeof room !== 'bigint' || room < 0n)
     throw new TypeError('room must be a non-negative BigInt')
   if (![wall, shelf, book, page].every(value => Number.isSafeInteger(value) && value >= 0))
@@ -187,6 +187,10 @@ function unpack(id) {
   remaining /= BigInt(dim.wallsPerRoom)
 
   return { room: remaining, wall, shelf, book, page }
+}
+
+export async function getId(text) {
+  return encode(text)
 }
 
 export async function getText(location) {

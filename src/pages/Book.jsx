@@ -1,10 +1,10 @@
 import { pageDim, dim, alphabet } from '../config/library'
-import { coerceLocation, getText, parseLocationParams } from '../app/library'
+import { coerceLocation, getId, getText, parseLocationParams } from '../app/library'
 
 import { PathHeader } from '../components/Location'
 
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import seedrandom from 'seedrandom'
 
 import './Book.css'
@@ -33,9 +33,16 @@ function generateFullPageString(text, randomisePosition = true, padding = [' '])
     return pageText
 }
 
-function BookBody({ text, book, page }) {
+function BookBody({ title, text, book, page }) {
     return (
         <article className="reader-book" aria-label="Book page">
+            {title && (<section>
+                <header>
+                    <em>{title}</em>
+                </header>
+                <hr />
+            </section>
+            )}
             <div className="reader-book-body">
                 <p
                     style={{
@@ -134,38 +141,53 @@ export function Book() {
     const { room, wall, shelf, book, page } = coerceLocation(parseLocationParams(params))
 
     const [text, setText] = useState('')
-    const [error, setError] = useState(null)
-    const navigate = useNavigate()
+    const [id, setId] = useState(null)
 
     useEffect(() => {
         let cancelled = false
 
         setText(null)
-        setError(null)
 
         getText({ room, wall, shelf, book, page })
         .then((result) => {
             if (!cancelled) setText(result)
         })
         .catch((err) => {
-            if (!cancelled) setError(err)
+            console.error(err)
         })
 
         return () => { cancelled = true }
     }, [room, wall, shelf, book, page])
 
-    if (error) {
-        console.error(error)
-        return <p role="alert">Error loading page.</p>
-    }
     if (text === null) return <p aria-live="polite">...</p>
+
+    useEffect(() => {
+        let cancelled = false
+
+        setId(null)
+
+        getId(text)
+        .then((result) => {
+            if (!cancelled) setId(result)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+
+        return () => { cancelled = true }
+    }, [text])
 
     return (
         <main className="reader">
             <PathHeader room={room} wall={wall} shelf={shelf} />
             <h2>Book {book}</h2>
 
-            <BookBody text={generateFullPageString(text)} book={book} page={page + 1} />
+            <BookBody
+                title={id}
+                text={generateFullPageString(text)}
+                book={book}
+                page={page + 1}
+            />
 
             <BookPageNavigation
                 i={page}
