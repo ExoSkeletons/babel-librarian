@@ -33,14 +33,14 @@ function generateFullPageString(text, randomisePosition = true, padding = alphab
     return pageText
 }
 
-function BookBody({ title, text, book, page }) {
+function BookBody({ title, subtitle, body, page }) {
     return (
         <article className="reader-book" aria-label="Book page">
-            {title && (<section>
-                <header>{title}</header>
-                <hr />
-            </section>
-            )}
+            <header>
+                <h2>{title}</h2>
+                {subtitle && <em>{subtitle}</em>}
+            </header>
+            <hr />
             <div className="reader-book-body">
                 <p
                     style={{
@@ -48,12 +48,12 @@ function BookBody({ title, text, book, page }) {
                         '--page-height': `${pageDim.linesPerPage}lh`,
                     }}
                 >
-                    {text}
+                    {body}
                 </p>
             </div>
             <hr />
             <footer>
-                <span>Book {book}</span>
+                <span aria-hidden="true" />
                 <em className="reader-book-page-count" aria-live="polite">
                     - {page} -
                 </em>
@@ -176,14 +176,14 @@ export function Book() {
     }, [text])
 
     return (
-        <main className="reader">
+        <main>
             <PathHeader room={room} wall={wall} shelf={shelf} />
-            <h2>Book {book}</h2>
+            {/*<h2>Book {book}</h2> */}
 
             <BookBody
-                title={id}
-                text={generateFullPageString(text)}
-                book={book + 1}
+                title={`Book ${book + 1}`}
+                subtitle={id}
+                body={generateFullPageString(text)}
                 page={page + 1}
             />
 
