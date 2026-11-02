@@ -1,26 +1,27 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 export function PathHeader({ room, wall, shelf, book }) {
     const navigate = useNavigate()
 
-    const labels = [
-        room != null ? `Room ${room}` : null,
-        wall != null ? `Wall ${wall + 1}` : null,
-        shelf != null ? `Shelf ${shelf + 1}` : null,
+    const route = `/browse`
+    const navs = [
+        room != null ? { text: `Room ${room}`, path: `${route}/${room}` } : null,
+        wall != null ? { text: `Wall ${wall + 1}`, path: `${route}/${room}/${wall}` } : null,
+        shelf != null ? { text: `Shelf ${shelf + 1}`, path: `${route}/${room}/${wall}/${shelf}` } : null,
         book != null ? `Book ${book + 1}` : null,
     ].filter((it) => it !== null)
 
     return (
         <section className="location">
             <header>
-                <p>
-                    {labels.map((l, i) => (
+                <div>
+                    {navs.map(({ text, path }, i) => (
                         <span key={i}>
                             {i > 0 && <> / </>}
-                            {l}
+                            <Link to={path}>{text}</Link>
                         </span>
                     ))}
-                </p>
+                </div>
                 <button type="button" onClick={() => navigate(-1)}>
                     {book != null ? 'Close' : 'Back'}
                 </button>

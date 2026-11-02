@@ -55,10 +55,6 @@ function WallFooter({ room }) {
 
     return (
         <nav>
-            <button type="button" onClick={() => navigate(-1)}>Back</button>
-            <span> </span>
-            <Link to={`/browse/${room}`}>Back to Room</Link>
-            <span> </span>
             <Link to="/browse">Back to Map</Link>
             <span> </span>
             <Link to="/desk">Back to Desk</Link>
