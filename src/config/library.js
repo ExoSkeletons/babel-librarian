@@ -1,9 +1,9 @@
 export const alphabet = 'abcdefghijklmnopqrstuvwxyz' + '1234567890' + ',. '
 
 
-const pagesPerBook =  600
-const booksPerShelf = 10
-const shelvesPerWall = 10
+const pagesPerBook =  800
+const booksPerShelf = 16
+const shelvesPerWall = 8
 const wallsPerRoom = 4 // 6-2
 
 const pagesPerShelf = pagesPerBook * booksPerShelf
