@@ -9,7 +9,7 @@ import seedrandom from 'seedrandom'
 
 import './Book.css'
 
-function generateFullPageString(text, randomisePosition = true, padding = [' ']) {
+function generateFullPageString(text, randomisePosition = true, padding = alphabet) {
     let pageText = text
 
     const r = seedrandom(text)
@@ -37,9 +37,7 @@ function BookBody({ title, text, book, page }) {
     return (
         <article className="reader-book" aria-label="Book page">
             {title && (<section>
-                <header>
-                    <em>{title}</em>
-                </header>
+                <header>{title}</header>
                 <hr />
             </section>
             )}
@@ -185,7 +183,7 @@ export function Book() {
             <BookBody
                 title={id}
                 text={generateFullPageString(text)}
-                book={book}
+                book={book + 1}
                 page={page + 1}
             />
 
