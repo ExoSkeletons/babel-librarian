@@ -1,6 +1,8 @@
 import { pageDim, dim, alphabet } from '../config/library'
 import { coerceLocation, getText, parseLocationParams } from '../app/library'
 
+import { PathHeader } from '../components/Location'
+
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import seedrandom from 'seedrandom'
@@ -44,8 +46,8 @@ function BookBody({ text, book, page }) {
                     {text}
                 </p>
             </div>
-            <hr className="reader-book-divider" />
-            <footer className="reader-book-footer">
+            <hr />
+            <footer>
                 <span>Book {book}</span>
                 <em className="reader-book-page-count" aria-live="polite">
                     - {page} -
@@ -160,22 +162,7 @@ export function Book() {
 
     return (
         <main className="reader">
-            <header className="reader-heading">
-                <p className="reader-location">
-                    Room {room.toString()}
-                <span aria-hidden="true"> / </span>
-                    Wall {wall + 1}
-                <span aria-hidden="true"> / </span>
-                    Shelf {shelf + 1}
-                </p>
-                <button
-                    className="reader-nav"
-                    type="button"
-                    onClick={() => navigate(-1)}
-                >
-                    Close
-                </button>
-            </header>
+            <PathHeader room={room} wall={wall} shelf={shelf} />
             <h2>Book {book}</h2>
 
             <BookBody text={generateFullPageString(text)} book={book} page={page + 1} />

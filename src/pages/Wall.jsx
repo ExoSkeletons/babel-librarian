@@ -6,6 +6,7 @@ import { Shelf } from '../components/ShelfPreview'
 
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { PathHeader } from '../components/Location'
 
 export function Doorway({ room, wall, replace = true }) {
     const isValid = isValidRoom(room)
@@ -33,9 +34,7 @@ function BookWall({ room, wall, shelf }) {
     const [selectedShelf, selectShelf] = useState(shelf)
 
     return (
-        <section>
-            <h2>Wall {wall}</h2>
-            <div className="shelves">
+        <section className="shelves">
                 {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
                     <Shelf
                         key={si}
@@ -47,7 +46,6 @@ function BookWall({ room, wall, shelf }) {
                         }}
                     />
                 ))}
-            </div>
         </section>
     )
 }
@@ -102,7 +100,7 @@ export function Wall() {
 
     return (
         <main>
-            <h1>Room {room.toString()}</h1>
+            <PathHeader room={room} wall={w.type == 'wall' ? w.wi : null} />
             <div>
                 <Link to={`/browse/${room}/${walls[pi].path}`} replace>{'<'}</Link>
                 {w.type === 'doorway'

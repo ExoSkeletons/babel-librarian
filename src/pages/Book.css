@@ -10,14 +10,6 @@
   text-align: left;
 }
 
-.reader header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  min-height: 2.5rem;
-}
-
 .reader-book {
   display: flex;
   flex: 1;
@@ -46,14 +38,14 @@
   white-space: pre-wrap;
 }
 
-.reader-book-divider {
+.reader-book hr {
   width: 100%;
   margin: 1rem 0;
   border: 0;
   border-top: 1px solid #b39a6f;
 }
 
-.reader-book-footer {
+.reader-book footer {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
