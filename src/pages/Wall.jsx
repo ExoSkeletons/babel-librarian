@@ -35,17 +35,17 @@ function BookWall({ room, wall, shelf }) {
 
     return (
         <section className="shelves">
-                {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
-                    <Shelf
-                        key={si}
-                        n={dim.booksPerShelf}
-                        onClick={() => selectShelf(si)}
-                        onBookClick={(book) => {
-                            //if (selectedShelf === si)
-                                navigate(`/browse/${room}/${wall}/${si}/${book}`)
-                        }}
-                    />
-                ))}
+            {Array.from({ length: dim.shelvesPerWall }, (_, si) => (
+                <Shelf
+                    key={si}
+                    n={dim.booksPerShelf}
+                    onClick={() => selectShelf(si)}
+                    onBookClick={(book) => {
+                        //if (selectedShelf === si)
+                            navigate(`/browse/${room}/${wall}/${si}/${book}`)
+                    }}
+                />
+            ))}
         </section>
     )
 }
@@ -103,15 +103,17 @@ export function Wall() {
             <PathHeader room={room} wall={w.type == 'wall' ? w.wi : null} />
             <div>
                 <Link to={`/browse/${room}/${walls[pi].path}`} replace>{'<'}</Link>
-                {w.type === 'doorway'
-                    ? <Doorway room={room + (w.dir === 'next' ? 1n : -1n)} wall={w.path} />
-                    : <BookWall
-                        key={`${room}:${w.wi}:${shelf}`}
-                        room={room}
-                        wall={w.wi}
-                        shelf={shelf}
-                    />
-                }
+                <section>
+                    {w.type === 'doorway'
+                        ? <Doorway room={room + (w.dir === 'next' ? 1n : -1n)} wall={w.path} />
+                        : <BookWall
+                            key={`${room}:${w.wi}:${shelf}`}
+                            room={room}
+                            wall={w.wi}
+                            shelf={shelf}
+                        />
+                    }
+                </section>
                 <Link to={`/browse/${room}/${walls[ni].path}`} replace>{'>'}</Link>
             </div>
             <WallFooter room={room} />
