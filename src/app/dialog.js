@@ -20,7 +20,8 @@ const offers = [
   'Are you in search of answers?',
   'Could I help you find something?',
   'Seek thou knowledge, or perhaps a tale?',
-  'What are thou looking for in the vast halls of the Library?',
+  'What are thou looking for in the vast halls?',
+  'Come to search these vast halls?',
   'What knowledge dost thou seek?',
   'What doth thyne heart desire?',
 ]
@@ -34,7 +35,7 @@ const wonders = [
   'Intruiging...',
   'Hmmm... yes...',
   'Now that one\'s quite popular.',
-  'Have\'nt seen that in a while.... I wonder...',
+  'Havn\'t seen that in a while.... I wonder...',
   'Well, if I recall...',
 ]
 
