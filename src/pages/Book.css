@@ -60,6 +60,9 @@ main {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr auto;
+  overflow: hidden;
+  text-wrap-mode: nowrap;
+  text-overflow: ellipsis;
 }
 
 .reader-book footer {
