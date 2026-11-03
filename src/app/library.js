@@ -1,9 +1,30 @@
-import { generate } from '../services/gemini'
 import { llm, dim, alphabet } from '../config/library'
 
+import { generate } from '../services/gemini'
+import { Permutation } from './permutation'
+import { modInv } from 'bigint-mod-arith'
+
+
+const ALPHABET_BASE = BigInt(alphabet.length)
+
+
+// Encoding maps
 export const itoc = Array.from(alphabet)
 export const ctoi = Object.fromEntries(itoc.map((char, index) => [char, index]))
-const ALPHABET_BASE = BigInt(alphabet.length)
+
+
+// Id shuffler.
+// Params (N : domain size, C : coprime of N, I : mod-inv of C) are pre-calced.
+// const N = BigInt(ALPHABET_BASE) ** BigInt(pageDim.charsPerPage)
+// console.log(N.toString())
+const N = BigInt('1632756439614829311667899982168790708542423134712332902667981174715441694838135258158794115243495530852802261870662519128024884431009574535985644729408674559858468303460030313890201621295700119365207305481983355474637645548748230415859010674611155837082383115028475366527401794178395534377757942377397968287566150232001')
+//console.log(`Alphabet size: ${ALPHABET_BASE}`)
+const C = 7 * 11 * 17 // N = `ALPHABET_BASE` ^ `longest word` = 39 ^ ... = (3 * 13) ^ ...
+// const I = modInv(C, N)
+// console.log(I.toString())
+const I = BigInt('1549185254393902219321261862378638701306103539581907918345021099309838491206236814845853545555707753490588547932286362686789080567848656664395852371218925747398180009852832429222024762146111190413741385338902465622230676678033080348737120899822043964596119044205780294291087111053909284719003334173207239582243818631127')
+const perm = new Permutation(N, C, I)
+
 
 function sanitiseText(text) {
   const sanitised = Array.from(text).filter(c => ctoi[c] !== undefined).join('')
@@ -36,13 +57,12 @@ export function coerceLocation(location) {
 
 
 function randomise(n) {
-  return n // todo: find some reversable randomiser
+  return perm.f(n)
 }
 
-function invRadomise(r) {
-  return r // todo: find some reversable randomiser
+function derandomise(r) {
+  return perm.f_inv(r)
 }
-
 
 
 function isValidId(id) {
@@ -197,7 +217,7 @@ export async function getText(location) {
   console.log(`location=${JSON.stringify(location, (_, value) => typeof value === 'bigint' ? value.toString() : value)}`)
   const id = pack(location)
   console.log(`location -pack-> id=${id}`)
-  const iid = randomise(id)
+  const iid = derandomise(id)
   console.log(`rid -inverted rand-> iid=${iid}`)
   const text = decode(iid)
   console.log(`id -decode-> text=${text}`)
