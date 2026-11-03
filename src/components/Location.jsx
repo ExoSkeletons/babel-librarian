@@ -6,9 +6,9 @@ export function PathHeader({ room, wall, shelf, book }) {
     const route = `/browse`
     const navs = [
         room != null ? { text: `Room ${room}`, path: `${route}/${room}` } : null,
-        wall != null ? { text: `Wall ${wall + 1}`, path: `${route}/${room}/${wall}` } : null,
-        shelf != null ? { text: `Shelf ${shelf + 1}`, path: `${route}/${room}/${wall}/${shelf}` } : null,
-        book != null ? `Book ${book + 1}` : null,
+        wall != null ? { text: `Wall ${wall}`, path: `${route}/${room}/${wall}` } : null,
+        shelf != null ? { text: `Shelf ${shelf}`, path: `${route}/${room}/${wall}/${shelf}` } : null,
+        book != null ? `Book ${book}` : null,
     ].filter((it) => it !== null)
 
     return (
@@ -22,6 +22,9 @@ export function PathHeader({ room, wall, shelf, book }) {
                         </span>
                     ))}
                 </div>
+                <button type="button" onClick={() => navigate('/')}>
+                    Exit
+                </button>
                 <button type="button" onClick={() => navigate(-1)}>
                     {book != null ? 'Close' : 'Back'}
                 </button>
