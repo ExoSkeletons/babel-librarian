@@ -1,4 +1,4 @@
-import { llm, dim, alphabet } from '../config/library'
+import { llm, dim, alphabet, radomiseLocation } from '../config/library'
 
 import { generate } from '../services/gemini'
 import { Permutation } from './permutation'
@@ -215,22 +215,26 @@ export async function getId(text) {
 
 export async function getText(location) {
   console.log(`location=${JSON.stringify(location, (_, value) => typeof value === 'bigint' ? value.toString() : value)}`)
-  const id = pack(location)
+  let id = pack(location)
   console.log(`location -pack-> id=${id}`)
-  const iid = derandomise(id)
-  console.log(`rid -inverted rand-> iid=${iid}`)
-  const text = decode(iid)
+  if (radomiseLocation) {
+    id = derandomise(id)
+    console.log(`rid -inverted rand-> id=${id}`)
+  }
+  const text = decode(id)
   console.log(`id -decode-> text=${text}`)
   return text
 }
 
 export async function getLocation(text) {
   console.log(`text=${text}`)
-  const id = encode(text)
+  let id = encode(text)
   console.log(`text -encoded-> id=${id}`)
-  const rid = randomise(id)
-  console.log(`id -r-> rid=${rid}`)
-  const location = unpack(rid)
+  if (radomiseLocation) {
+    id = randomise(id)
+    console.log(`id -r-> rid=${id}`)
+  }
+  const location = unpack(id)
   console.log(`id -unpacked-> location=${JSON.stringify(location, (_, value) => typeof value === 'bigint' ? value.toString() : value)}`)
   return location
 }

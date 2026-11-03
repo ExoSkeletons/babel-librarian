@@ -1,4 +1,4 @@
-import { pageDim, dim, alphabet } from '../config/library'
+import { pageDim, dim, radnomPagePadders as pagePadders, randomiseTextPosition } from '../config/library'
 import { coerceLocation, getId, getText, parseLocationParams } from '../app/library'
 
 import { PathHeader } from '../components/Location'
@@ -9,14 +9,15 @@ import seedrandom from 'seedrandom'
 
 import './Book.css'
 
-function generateFullPageString(text, randomisePosition = true, padding = alphabet) {
+function generateFullPageString(text) {
     let pageText = text
 
     const r = seedrandom(text)
 
     const sub = Math.max(0, pageDim.charsPerPage - text.length)
-    const position = randomisePosition ? Math.floor(r() * (sub + 1)) : 0
-    
+    const position = randomiseTextPosition ? Math.floor(r() * (sub + 1)) : 0
+
+    const padding = pagePadders
     const prefix = Array.from({ length: position }, () =>
         padding[Math.floor(r() * padding.length)]
     ).join('')

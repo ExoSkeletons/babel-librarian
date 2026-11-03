@@ -21,6 +21,10 @@ export const dim = {
   pagesPerRoom,
 }
 
+export const radomiseLocation = false
+export const radnomPagePadders = alphabet
+export const randomiseTextPosition = true
+
 const linesPerPage = 10
 const charsPerLine = 20
 export const pageDim = {
