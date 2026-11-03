@@ -1,4 +1,4 @@
-import { pageDim, dim, radnomPagePadders as pagePadders, randomiseTextPosition } from '../config/library'
+import { pageDim, dim, randomPagePadders as pagePadders, randomiseTextPosition } from '../config/library'
 import { coerceLocation, getId, getText, parseLocationParams } from '../app/library'
 
 import { PathHeader } from '../components/Location'

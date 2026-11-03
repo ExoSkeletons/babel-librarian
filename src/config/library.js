@@ -22,7 +22,7 @@ export const dim = {
 }
 
 export const radomiseLocation = false
-export const radnomPagePadders = alphabet
+export const randomPagePadders = alphabet
 export const randomiseTextPosition = true
 
 const linesPerPage = 10
