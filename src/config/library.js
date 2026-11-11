@@ -21,7 +21,7 @@ export const dim = {
   pagesPerRoom,
 }
 
-export const radomiseLocation = false
+export const radomiseLocation = true
 export const randomPagePadders = alphabet
 export const randomiseTextPosition = true
 
