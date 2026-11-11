@@ -1,6 +1,6 @@
 import { llm, dim, alphabet, radomiseLocation } from '../config/library'
 
-import { generate } from '../services/gemini'
+import { ask } from '../services/scrolls'
 import { Permutation } from './permutation'
 import { modInv } from 'bigint-mod-arith'
 
@@ -32,8 +32,8 @@ function sanitiseText(text) {
 }
 
 export async function generateAnswer(question) {
-  const llmResponse = await generate(question, llm.systemPrompt)
-  const sanitised = sanitiseText(llmResponse)
+  const answer = await ask(question)
+  const sanitised = sanitiseText(answer)
   return sanitised
 }
 
